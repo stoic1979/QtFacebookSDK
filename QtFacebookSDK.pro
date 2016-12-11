@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,9 +12,13 @@ TARGET = QtFacebookSDK
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+           mainwindow.cpp \
+           facebookwebview.cpp \
+           facebook.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+           facebookwebview.h \
+           facebook.h
 
 FORMS    += mainwindow.ui
