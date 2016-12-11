@@ -1,18 +1,18 @@
 /*
- *  This file is part of QtFacebookSDK.
+ *  This file is part of SocialDashboard.
  *
- *  QtFacebookSDK is free software: you can redistribute it and/or modify
+ *  SocialDashboard is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QtFacebookSDK is distributed in the hope that it will be useful,
+ *  SocialDashboard is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QtFacebookSDK.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with SocialDashboard.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  *  ------------------------------------------------------------------------------
@@ -27,6 +27,9 @@
 
 #include <QObject>
 #include <QUrl>
+
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 namespace nsFacebook {
 
@@ -46,7 +49,7 @@ public:
      *
      * @param clientId        Client Id of facebook app
      * @param clientSecret    Client Secret of facebook app
-     * @return Initialized and returns an object of facebook singleton
+     * @return                An Initialized object of facebook singleton
      */
     static Facebook* InitializeFacebook(QString clientId, QString clientSecret);
 
@@ -61,6 +64,7 @@ public:
      */
     static Facebook* Instance();
 
+    void GetFacebookAccessToken(QUrl url);
     void ParseLoginResponse(QString jsonStr);
 
     //-----------------------------------------------
@@ -78,12 +82,11 @@ public:
     void SetAccessCode(QString code);
     void SetAccessToken(QString accessToken);
 
-
-
 signals:
+    void GotFacebookAccessToken(bool error, QString jsonStr);
 
-public slots:
-
+public slots:   
+    void ReplyForAccessToken(QNetworkReply *reply);
 
 private:
     /**
@@ -96,7 +99,6 @@ private:
      */
     explicit Facebook(QString clientId, QString clientSecret, QObject *parent = 0);
 
-
 private:
     QString clientId;
     QString clientSecret;
@@ -106,7 +108,6 @@ private:
     QString accessTokenUrl;\
     QString oauthUrl;
 };
-
 
 //--------------------------------------------------
 // Convenience MACRO wrapper functions/shoortcuts
@@ -118,8 +119,7 @@ private:
 #define FB_ACCESS_TOKEN_URL         Facebook::Instance()->AccessTokenUrl()
 #define FB_ACCESS_TOKEN             Facebook::Instance()->AccessToken()
 #define FB_SUCCESS_URL              QString("https://www.facebook.com/connect/login_success.html")
+#define FB                          Facebook::Instance()
 }// nsFacebook
 
 #endif // FACEBOOK_H
-
-
