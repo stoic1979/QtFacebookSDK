@@ -64,12 +64,27 @@ void Facebook::GetFacebookAccessToken(QUrl url) {
     manager->get(request);
 }
 
-void Facebook::ReplyForAccessToken(QNetworkReply *reply) {
-    qDebug() << "[FacebookWebView] got network reply";
+void Facebook::GetFacebookUserId() {
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(ReplyForUserId(QNetworkReply*)));
+
+    QString str = QString("https://graph.facebook.com/me?access_token=%1").arg(accessToken);
+
+    // creating get request
+    QNetworkRequest request;
+    request.setUrl(QUrl(str));
+    request.setRawHeader("User-Agent", "Some-Browser 1.0");
+
+    manager->get(request);
+}
+
+void Facebook::ReplyForUserId(QNetworkReply *reply) {
+    qDebug() << "[Facebook] ReplyForUserId() :: got reply for user id";
 
     // Getting the http status code
     int HttpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    qDebug() << "[FacebookWebView] HttpStatusCode: " << HttpStatusCode;
+    qDebug() << "[Facebook] ReplyForUserId() ::  HttpStatusCode: " << HttpStatusCode;
 
     bool error = false;
     QString respData;
@@ -77,12 +92,40 @@ void Facebook::ReplyForAccessToken(QNetworkReply *reply) {
     if (reply->error() == QNetworkReply::NoError) {
         respData = reply->readAll();
 
-        Facebook::Instance()->ParseLoginResponse(respData);
+        ParseUserIdResponse(respData);
     }
     else {
         error = true;
         respData = reply->errorString();
-        qDebug() << "[FacebookWebView] reply content:-\n" << reply->readAll();
+        qDebug() << "[Facebook] ReplyForUserId() reply content:-\n" << reply->readAll();
+
+    }
+    delete reply;
+}
+
+void Facebook::ReplyForAccessToken(QNetworkReply *reply) {
+    qDebug() << "[Facebook] got reply for access token";
+
+    // Getting the http status code
+    int HttpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    qDebug() << "[Facebook] ReplyForAccessToken() ::  HttpStatusCode: " << HttpStatusCode;
+
+    bool error = false;
+    QString respData;
+
+    if (reply->error() == QNetworkReply::NoError) {
+        respData = reply->readAll();
+
+        ParseLoginResponse(respData);
+
+        // lets get user id, once we have the access token
+        GetFacebookUserId();
+
+    }
+    else {
+        error = true;
+        respData = reply->errorString();
+        qDebug() << "[Facebook] reply content:-\n" << reply->readAll();
 
     }
     delete reply;
@@ -105,6 +148,34 @@ void Facebook::ParseLoginResponse(QString jsonStr) {
     accessToken = jsonValue.toString();
 
     qDebug () << "[Facebook] acces_token: " << accessToken;
+}
+
+void Facebook::ParseUserIdResponse(QString jsonStr) {
+
+    qDebug () << "[Facebook] ParseUserIdResponse() :: jsonStr: " << jsonStr;
+
+    QJsonDocument document = QJsonDocument::fromJson(jsonStr.toLatin1());
+    if (!document.isObject()) {
+        qDebug() << "ERROR:: Document is not an object";
+        return ;
+    }
+    QJsonObject object = document.object();
+    QJsonValue jsonValue = object.value("id");
+    if (jsonValue.isUndefined()) {
+        qDebug() << "Key user id does not exist";
+    }
+
+    userId = jsonValue.toString();
+
+    jsonValue = object.value("name");
+        if (jsonValue.isUndefined()) {
+            qDebug() << "Key user name does not exist";
+        }
+
+        userName = jsonValue.toString();
+
+    qDebug () << "[Facebook] ParseUserIdResponse() :: userId: " << userId;
+    qDebug () << "[Facebook] ParseUserIdResponse() :: userName: " << userName;
 }
 
 void Facebook::SetAccessCode(QString code){
@@ -143,3 +214,10 @@ QUrl Facebook::AccessTokenUrl() {
     return QUrl(accessTokenUrl);
 }
 
+QString Facebook::UserId() {
+    return userId;
+}
+
+QString Facebook::Username() {
+    return userName;
+}
