@@ -40,7 +40,7 @@ Facebook::Facebook(QString clientId, QString clientSecret, QObject *parent):
             arg(clientId).arg(FB_SUCCESS_URL);
 }
 
-Facebook* Facebook::InitializeFacebook(QString clientId, QString clientSecret) {
+Facebook* Facebook::Initialize(QString clientId, QString clientSecret) {
     if(!instance) {
         instance = new Facebook(clientId, clientSecret);
     }
@@ -51,7 +51,7 @@ Facebook* Facebook::Instance() {
     return instance;
 }
 
-void Facebook::GetFacebookAccessToken(QUrl url) {
+void Facebook::GetAccessToken(QUrl url) {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(ReplyForAccessToken(QNetworkReply*)));
@@ -64,7 +64,7 @@ void Facebook::GetFacebookAccessToken(QUrl url) {
     manager->get(request);
 }
 
-void Facebook::GetFacebookUserId() {
+void Facebook::GetUserId() {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(ReplyForUserId(QNetworkReply*)));
@@ -119,7 +119,7 @@ void Facebook::ReplyForAccessToken(QNetworkReply *reply) {
         ParseLoginResponse(respData);
 
         // lets get user id, once we have the access token
-        GetFacebookUserId();
+        GetUserId();
 
     }
     else {

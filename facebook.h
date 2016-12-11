@@ -51,7 +51,7 @@ public:
      * @param clientSecret    Client Secret of facebook app
      * @return                An Initialized object of facebook singleton
      */
-    static Facebook* InitializeFacebook(QString clientId, QString clientSecret);
+    static Facebook* Initialize(QString clientId, QString clientSecret);
 
     /**
      * @brief Instance
@@ -64,8 +64,8 @@ public:
      */
     static Facebook* Instance();
 
-    void GetFacebookAccessToken(QUrl url);
-    void GetFacebookUserId();
+    void GetAccessToken(QUrl url);
+    void GetUserId();
 
     void ParseLoginResponse(QString jsonStr);
     void ParseUserIdResponse(QString jsonStr);

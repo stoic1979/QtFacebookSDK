@@ -52,7 +52,7 @@ void FacebookWebView::WebViewUrlChanged(const QUrl& url) {
         QString code = query.queryItemValue("code");
         FB_SET_ACCESS_CODE(code);
 
-        FB->GetFacebookAccessToken(FB_ACCESS_TOKEN_URL);
+        FB->GetAccessToken(FB_ACCESS_TOKEN_URL);
     }
 }
 
