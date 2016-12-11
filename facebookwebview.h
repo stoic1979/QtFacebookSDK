@@ -1,18 +1,18 @@
 /*
- *  This file is part of QtFacebookSDK.
+ *  This file is part of SocialDashboard.
  *
- *  QtFacebookSDK is free software: you can redistribute it and/or modify
+ *  SocialDashboard is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QtFacebookSDK is distributed in the hope that it will be useful,
+ *  SocialDashboard is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QtFacebookSDK.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with SocialDashboard.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  *  ------------------------------------------------------------------------------
@@ -21,6 +21,7 @@
  *   Website: www.weavebytes.com
  *  ------------------------------------------------------------------------------
  */
+
 
 #ifndef FACEBOOKWEBVIEW_H
 #define FACEBOOKWEBVIEW_H
@@ -79,15 +80,13 @@ public:
 
     void LoginAndGetAccessToken();
 
-signals:
-   void GotFacebookAccessToken(bool error, QString jsonStr);
+
 
 private:
-    void GetFacebookAccessToken(QUrl url);
+    //pass
 
 private slots:
     void WebViewUrlChanged(const QUrl& url);
-    void ReplyFinished(QNetworkReply *reply);
 
 private:
     // pass
