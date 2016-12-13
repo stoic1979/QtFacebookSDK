@@ -93,6 +93,9 @@ void Facebook::ReplyForUserId(QNetworkReply *reply) {
         respData = reply->readAll();
 
         ParseUserIdResponse(respData);
+
+        // after we have user id, lets get the friend list
+        GetFriendList();
     }
     else {
         error = true;
@@ -176,6 +179,28 @@ void Facebook::ParseUserIdResponse(QString jsonStr) {
 
     qDebug () << "[Facebook] ParseUserIdResponse() :: userId: " << userId;
     qDebug () << "[Facebook] ParseUserIdResponse() :: userName: " << userName;
+}
+
+void Facebook::GetFriendList() {
+    qDebug () << "[Facebook] Getting Friend List...";
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(ReplyForFriendList(QNetworkReply*)));
+
+    QString str = QString("https://graph.facebook.com/me/friends?access_token=%1").arg(accessToken);
+
+    // creating get request
+    QNetworkRequest request;
+    request.setUrl(QUrl(str));
+    request.setRawHeader("User-Agent", "Some-Browser 1.0");
+
+    manager->get(request);
+
+}
+
+void Facebook::ReplyForFriendList(QNetworkReply* reply) {
+    qDebug() << "[Facebook] got reply for friend list: " << reply->readAll();
 }
 
 void Facebook::SetAccessCode(QString code){

@@ -66,6 +66,7 @@ public:
 
     void GetAccessToken(QUrl url);
     void GetUserId();
+    void GetFriendList();
 
     void ParseLoginResponse(QString jsonStr);
     void ParseUserIdResponse(QString jsonStr);
@@ -94,6 +95,7 @@ signals:
 public slots:   
     void ReplyForAccessToken(QNetworkReply *reply);
     void ReplyForUserId(QNetworkReply *reply);
+    void ReplyForFriendList(QNetworkReply* reply);
 
 private:
     /**
