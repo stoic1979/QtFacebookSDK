@@ -39,6 +39,7 @@ SOURCES += main.cpp \
 
 HEADERS  += mainwindow.h \
            facebookwebview.h \
-           facebook.h
+           facebook.h \
+           constants.h
 
 FORMS    += mainwindow.ui
