@@ -28,13 +28,16 @@
 #include <QJsonValue>
 
 #include "facebook.h"
+#include "constants.h"
 
 using namespace nsFacebook;
 
 static Facebook *instance;
 
 Facebook::Facebook(QString clientId, QString clientSecret, QObject *parent):
-    QObject(parent), clientId(clientId), clientSecret(clientSecret)
+    QObject(parent),
+    clientId(clientId),
+    clientSecret(clientSecret)
 {
     oauthUrl = QString("https://www.facebook.com/v2.8/dialog/oauth?client_id=%1&redirect_uri=%2").
             arg(clientId).arg(FB_SUCCESS_URL);
@@ -59,7 +62,7 @@ void Facebook::GetAccessToken(QUrl url) {
     // creating get request
     QNetworkRequest request;
     request.setUrl(url);
-    request.setRawHeader("User-Agent", "Some-Browser 1.0");
+    request.setRawHeader("User-Agent", USER_AGENT);
 
     manager->get(request);
 }
@@ -74,7 +77,7 @@ void Facebook::GetUserId() {
     // creating get request
     QNetworkRequest request;
     request.setUrl(QUrl(str));
-    request.setRawHeader("User-Agent", "Some-Browser 1.0");
+    request.setRawHeader("User-Agent", USER_AGENT);
 
     manager->get(request);
 }
@@ -193,7 +196,7 @@ void Facebook::GetFriendList() {
     // creating get request
     QNetworkRequest request;
     request.setUrl(QUrl(str));
-    request.setRawHeader("User-Agent", "Some-Browser 1.0");
+    request.setRawHeader("User-Agent", USER_AGENT);
 
     manager->get(request);
 
